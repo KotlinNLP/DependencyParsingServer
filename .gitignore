@@ -1,0 +1,9 @@
+### Configuration
+config/*
+!config/configuration.xml.example
+
+### Python
+*.pyc
+
+### Intellij
+.idea/*

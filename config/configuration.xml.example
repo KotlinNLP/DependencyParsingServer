@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <max_text_len>1200</max_text_len>
+
+    <nlp_server>
+        <host>127.0.0.1</host>
+        <port>3000</port>
+        <path>/parse</path>
+    </nlp_server>
+
+</configuration>
