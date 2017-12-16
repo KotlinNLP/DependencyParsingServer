@@ -1,6 +1,6 @@
-# DependencyTreeServer
+# DependencyParsingServer
 
-DependencyTreeServer is a web server that forwards requests to the 
+DependencyParsingServer is a web server that forwards requests to the 
 [NLPServer](https://github.com/KotlinNLP/NLPServer "NLPServer on GitHub") 
 and return the response for the 
 [DependencyParsingDemo](https://github.com/KotlinNLP/DependencyParsingDemo "DependencyParsingDemo on GitHub").
@@ -53,4 +53,4 @@ This software is released under the terms of the
 ## Contributions
 
 We greatly appreciate any bug reports and contributions, which can be made by filing an issue or making a pull 
-request through the [github page](https://github.com/KotlinNLP/DependencyTreeServer "DependencyTreeServer on GitHub").
+request through the [github page](https://github.com/KotlinNLP/DependencyParsingServer "DependencyParsingServer on GitHub").
