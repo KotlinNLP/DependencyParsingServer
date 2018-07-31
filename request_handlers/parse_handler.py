@@ -59,7 +59,7 @@ class ParseHandler(ExtendedRequestHandler):
             "sentences": [
                {
                     "id": sentence_id,
-                    "atoms": [cls._convert_token(token) for token in sentence]
+                    "atoms": [cls._convert_token(token) for token in sentence['tokens']]
                }
                for sentence_id, sentence in enumerate(nlp_server_response['sentences'])
             ]
@@ -68,12 +68,15 @@ class ParseHandler(ExtendedRequestHandler):
     @classmethod
     def _convert_token(cls, token):
 
+        head = token['dependency']['head']
+        corefs = token['coReferences']
+
         return {
             "id": token['id'] + 1,
-            "form": token['form'],
-            "pos": token['pos'],
-            "head": token['head'] + 1 if (token['head'] is not None) else 0,
-            "deprel": token['deprel'].upper(),
-            "corefs": None,
+            "form": token['surface']['form'],
+            "pos": token['morphology'][0]['type'] if token['morphology'] else None,
+            "head": head + 1 if head else 0,
+            "deprel": token['dependency']['relation'].upper(),
+            "corefs": [{"atomId": c['tokenId'] + 1, "sentenceId": c['sentenceId']} for c in corefs] if corefs else None,
             "sem": None
         }
