@@ -19,7 +19,7 @@ class ParseHandler(ExtendedRequestHandler):
 
     route = "/parse"
 
-    _not_supported_lang_prefix = "Not supported language"
+    _not_supported_lang_prefix = "Language not supported"
 
     def __init__(self, application, request, config):
 
