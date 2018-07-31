@@ -75,7 +75,7 @@ class ParseHandler(ExtendedRequestHandler):
             "id": token['id'] + 1,
             "form": token['surface']['form'],
             "pos": token['morphology'][0]['type'] if token['morphology'] else None,
-            "head": head + 1 if head else 0,
+            "head": head + 1 if head is not None else 0,
             "deprel": token['dependency']['relation'].upper(),
             "corefs": [{"atomId": c['tokenId'] + 1, "sentenceId": c['sentenceId']} for c in corefs] if corefs else None,
             "sem": None
