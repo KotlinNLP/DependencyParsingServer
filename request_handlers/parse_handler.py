@@ -4,6 +4,7 @@
 # -- IMPORT LIBRARIES
 # -----
 
+import re
 from utils.nlp_server_interface import NLPServerInterface
 from utils.request_decorators import check_arguments
 from utils.request_handler import ExtendedRequestHandler
@@ -74,9 +75,9 @@ class ParseHandler(ExtendedRequestHandler):
         return {
             "id": token['id'] + 1,
             "form": token['surface']['form'],
-            "pos": token['morphology'][0]['type'] if token['morphology'] else None,
+            "pos": " + ".join(map(lambda m: m['pos'], token['morphology'][0]['list'])) if token['morphology'] else None,
             "head": head + 1 if head is not None else 0,
-            "deprel": token['dependency']['relation'].upper(),
+            "deprel": " + ".join(map(lambda d: re.sub(r".*~", "", d), token['dependency']['relation'].upper().split("+"))),
             "corefs": [{"atomId": c['tokenId'] + 1, "sentenceId": c['sentenceId']} for c in corefs] if corefs else None,
             "sem": None
         }
