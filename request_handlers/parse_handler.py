@@ -74,7 +74,7 @@ class ParseHandler(ExtendedRequestHandler):
 
         return {
             "id": token['id'] + 1,
-            "form": token['surface']['form'],
+            "form": (token['surface']['form'] if 'surface' in token else None),
             "pos": " + ".join(map(lambda m: m['pos'], token['morphology'][0]['list'])) if token['morphology'] else None,
             "head": head + 1 if head is not None else 0,
             "deprel": " + ".join(map(lambda d: re.sub(r".*~", "", d), token['dependency']['relation'].upper().split("+"))),
