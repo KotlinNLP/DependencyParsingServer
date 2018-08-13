@@ -60,24 +60,45 @@ class ParseHandler(ExtendedRequestHandler):
             "sentences": [
                {
                     "id": sentence_id,
-                    "atoms": [cls._convert_token(token) for token in sentence['tokens']]
+                    "atoms": _reindex_tokens(map(_convert_token, sentence['tokens']))
                }
                for sentence_id, sentence in enumerate(nlp_server_response['sentences'])
             ]
         }
 
-    @classmethod
-    def _convert_token(cls, token):
 
-        head = token['dependency']['head']
-        corefs = token['coReferences']
+def _convert_token(token):
 
-        return {
-            "id": token['id'] + 1,
-            "form": (token['surface']['form'] if 'surface' in token else None),
-            "pos": " + ".join(map(lambda m: m['pos'], token['morphology'][0]['list'])) if token['morphology'] else None,
-            "head": head + 1 if head is not None else 0,
-            "deprel": " + ".join(map(lambda d: re.sub(r".*~", "", d), token['dependency']['relation'].upper().split("+"))),
-            "corefs": [{"atomId": c['tokenId'] + 1, "sentenceId": c['sentenceId']} for c in corefs] if corefs else None,
-            "sem": None
-        }
+    head = token['dependency']['head']
+    corefs = token['coReferences']
+
+    return {
+        "id": token['id'] + 1,
+        "form": (token['surface']['form'] if 'surface' in token else None),
+        "pos": " + ".join(map(lambda m: m['pos'], token['morphology'][0]['list'])) if token['morphology'] else None,
+        "head": head + 1 if head is not None else 0,
+        "deprel": " + ".join(map(lambda d: re.sub(r".*~", "", d), token['dependency']['relation'].upper().split("+"))),
+        "corefs": [{"atomId": c['tokenId'] + 1, "sentenceId": c['sentenceId']} for c in corefs] if corefs else None,
+        "sem": None
+    }
+
+
+def _reindex_tokens(tokens):
+
+    def replace_id(obj, id_key):
+        obj[id_key] = new_ids_map[obj[id_key]]
+
+    new_ids_map = {token['id']: i + 1 for i, token in enumerate(tokens)}
+
+    for token in tokens:
+
+        replace_id(obj=token, id_key="id")
+
+        if token['head'] != 0:
+            replace_id(obj=token, id_key="head")
+
+        if token["corefs"] is not None:
+            for coref in token["corefs"]:
+                replace_id(obj=coref, id_key="atomId")
+
+    return tokens
